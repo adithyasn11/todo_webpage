@@ -4,95 +4,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TODO </title>
+    <title>TODO LIST</title>
+    <style>
+        body {
+            background-color: rgb(245, 240, 255);
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .box {
+            width: 400px;
+            background-color: rgb(33, 150, 243);
+            border-radius: 10px;
+            box-shadow: 3px 3px 50px rgb(0, 102, 204);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .input-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .text {
+            border: none;
+            width: 230px;
+            height: 35px;
+            padding: 5px;
+            border-radius: 5px;
+            margin-right: 10px;
+            outline: none;
+        }
+
+        button {
+            border: none;
+            height: 40px;
+            width: 80px;
+            background-color: rgb(255, 193, 7);
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .list {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            margin-bottom: 15px;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        ul li input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .delete-btn {
+            background-color: rgb(220, 53, 69);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        h2 {
+            color: rgb(33, 150, 243);
+            font-size: 22px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        b {
+            margin-top: 20px;
+            display: block;
+            color: rgb(255, 255, 255);
+            font-size: 18px;
+        }
+    </style>
 </head>
-<style>
-body{
-    background-color: rgb(240, 240, 240); /* Light grey background */
-    margin: 0;
-    padding: 0;
-}
-
-.body{
-    width: 100%;
-    height: 720px;
-    justify-content: center;
-    color: rgb(255, 255, 255); /* Changed text color to black */
-}
-
-.box{
-    border: none;
-    width: 500px;
-    height: 650px;
-    background-color: rgb(25, 42, 86); /* Dark blue box background */
-    border-radius: 4px;
-    box-shadow: 3px 3px 50px rgb(255, 173, 96); /* Soft orange shadow */
-    opacity: 0.9; /* Slightly more opaque */
-}
-
-.text{
-    border: none;
-    width: 230px;
-    height: 30px;
-}
-
-button{
-    border: none;
-    height: 30px;
-    width: 50px;
-    background-color: rgb(96, 191, 183); /* Light teal button */
-}
-
-.list{
-    border: rgb(96, 191, 183) 1px solid; /* Light teal border */
-    border-radius: 4px;
-    height: 400px;
-    width: 350px;
-}
-
-ul{
-    list-style-type: none;
-}
-
-h2{
-    margin-left: 120px;
-}
-
-.body, .box{
-    flex-direction: column;
-    justify-content: space-evenly;
-    align-items: center;
-    display: flex;
-}
-</style>
 
 <body>
-    <div class="body">
-        <div class="box">
-        <h1>MY TODO LIST</h1>
-        <div>
+    <div class="box">
+        <h1>My TODO List</h1>
+        <div class="input-container">
             <input class="text" type="text" id="task" placeholder="Enter your task">
-            <button>Add</button>
+            <button id="add-btn" onclick="addTask()">Add</button>
         </div>
         <div class="list">
-            <u><h2>My Tasks</h2></u>
-            <ul>
-                <li><input type="checkbox" id="buy" name="buy">
-                    <label for="buy">Buy tomatoes</label>
-                </li>
-                <li><input type="checkbox" id="kids" name="kids">
-                    <label for="kids">Complete records</label>
-                </li>
-                <li><input type="checkbox" id="dish" name="dish">
-                    <label for="dish">wash dishes</label>
-                </li>
-            </ul>
+            <h2>My Tasks</h2>
+            <ul id="task-list"></ul>
         </div>
-    
-        <b>Completed : 0 | Incomplete : 0 </b>
+        <b>Completed: <span id="completed-count">0</span> | Incomplete: <span id="incomplete-count">0</span></b>
     </div>
-</div>
-</body>
 
+    <script>
+        document.getElementById('task').addEventListener('keyup', function (event) {
+            if (event.key === 'Enter') {
+                document.getElementById('add-btn').click();
+            }
+        });
+
+        function addTask() {
+            const taskText = document.getElementById('task').value;
+            if (taskText === "") {
+                alert("Please enter a task");
+                return;
+            }
+
+            const ul = document.getElementById("task-list");
+            const li = document.createElement("li");
+
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.onclick = updateTaskCount;
+
+            const label = document.createElement("label");
+            label.innerHTML = taskText;
+
+            const deleteButton = document.createElement("button");
+            deleteButton.innerHTML = "Delete";
+            deleteButton.classList.add("delete-btn");
+            deleteButton.onclick = function () {
+                ul.removeChild(li);
+                updateTaskCount();
+            };
+
+            li.appendChild(checkbox);
+            li.appendChild(label);
+            li.appendChild(deleteButton);
+            ul.appendChild(li);
+
+            document.getElementById('task').value = "";
+            updateTaskCount();
+        }
+
+        function updateTaskCount() {
+            const tasks = document.querySelectorAll("#task-list li");
+            const completedTasks = document.querySelectorAll("#task-list input[type='checkbox']:checked");
+
+            document.getElementById("completed-count").innerHTML = completedTasks.length;
+            document.getElementById("incomplete-count").innerHTML = tasks.length - completedTasks.length;
+        }
+    </script>
+</body>
 
 </html>
