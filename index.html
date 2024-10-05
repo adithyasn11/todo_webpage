@@ -10,7 +10,7 @@
 
 <body class="bg-purple-50 flex justify-center items-center h-screen">
     <div class="w-96 bg-blue-500 rounded-lg p-6 text-center" style="box-shadow: 0 10px 30px rgba(0, 102, 204, 0.6);">
-        <h1 class="text-white text-2xl mb-5">My TODO List</h1>
+        <h1 class="text-white text-2xl mb-5 underline">My TODO List</h1>
         <div class="flex justify-center items-center mb-5">
             <input class="border-none w-56 h-10 px-3 rounded-md focus:outline-none" type="text" id="task" placeholder="Enter your task">
             <button id="add-btn" class="bg-yellow-500 text-white h-10 w-20 rounded-md ml-3 hover:bg-yellow-600" onclick="addTask()">Add</button>
@@ -38,15 +38,19 @@
 
             const ul = document.getElementById("task-list");
             const li = document.createElement("li");
-            li.classList.add("flex", "justify-between", "items-center", "mb-4", "text-lg");
+            li.classList.add("flex", "justify-between", "items-center", "mb-4", "text-lg", "border", "border-gray-300", "rounded-md", "p-2", "w-full", "text-left");
+
+            const taskRow = document.createElement("div");
+            taskRow.classList.add("flex", "w-full", "items-center");
 
             const checkbox = document.createElement("input");
             checkbox.type = "checkbox";
-            checkbox.classList.add("mr-3");
+            checkbox.classList.add("mr-3", "mt-1");
             checkbox.onclick = updateTaskCount;
 
             const label = document.createElement("label");
             label.innerHTML = taskText;
+            label.classList.add("flex-grow", "break-words");
 
             const deleteButton = document.createElement("button");
             deleteButton.innerHTML = "Delete";
@@ -56,9 +60,11 @@
                 updateTaskCount();
             };
 
-            li.appendChild(checkbox);
-            li.appendChild(label);
-            li.appendChild(deleteButton);
+            taskRow.appendChild(checkbox);
+            taskRow.appendChild(label);
+            taskRow.appendChild(deleteButton);
+
+            li.appendChild(taskRow);
             ul.appendChild(li);
 
             document.getElementById('task').value = "";
